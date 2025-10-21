@@ -4,14 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🪙 Coin Luck Test Game</title>
+
+<!-- Facebook / Open Graph Meta Tags -->
+<meta property="og:title" content="🪙 Coin Luck Test Game - Check Your Luck!" />
+<meta property="og:description" content="मैंने Coin Luck Test खेला और देखा कि मेरा luck कैसा है! आप भी try करें और देखें आप कितने lucky हैं!" />
+<meta property="og:image" content="https://i.ibb.co/7yP9L9J/coin-game-logo.png" /> <!-- Example logo -->
+<meta property="og:url" content="https://yourdomain.com/coin-luck-game.html" />
+<meta property="og:type" content="website" />
+
 <style>
   body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #dff9fb, #c7ecee);
     text-align: center;
     padding: 20px;
+    position: relative;
   }
-  h1 { color: #0c2461; }
+  .logo {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #0c2461;
+    background: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.2);
+    z-index: 1000;
+  }
+  h1 { color: #0c2461; margin-top: 50px; }
   .rules {
     background: #fff;
     padding: 15px;
@@ -59,11 +81,13 @@
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
   }
-  .share-btn { background: #22a6b3; margin-top: 10px; }
-  .restart-btn { background: #4cd137; margin-top: 10px; }
+  .share-btn { background: #22a6b3; margin-top: 10px; display: block; width: 220px; margin-left:auto; margin-right:auto; }
+  .restart-btn { background: #4cd137; margin-top: 10px; display: block; width: 220px; margin-left:auto; margin-right:auto; }
 </style>
 </head>
 <body>
+
+<div class="logo">APPU</div>
 
 <h1>🪙 Coin Luck Test Game 🪙</h1>
 
@@ -121,21 +145,30 @@ async function startTest(userChoice) {
   else if(ratio>=0.5) luckLevel="🙂 Normal";
   else luckLevel="😅 Unlucky";
   
+  const gameLink = window.location.href;
+
   resultDiv.innerHTML = `
     <h2>आपका Result:</h2>
     <p>${results.join("<br>")}</p>
     <h3>Final Score: ${matches}/10 → ${luckLevel}</h3>
-    <button class="share-btn" onclick="shareResult('${luckLevel}', ${matches})">📤 Result Share करें</button>
+    <button class="share-btn" onclick="shareResultFB('${luckLevel}', ${matches}, '${gameLink}')">📤 Facebook Share करें</button>
+    <button class="share-btn" onclick="shareResultWA('${luckLevel}', ${matches}, '${gameLink}')">📤 WhatsApp Share करें</button>
     <button class="restart-btn" onclick="window.location.reload()">🔄 Restart Game</button>
   `;
 }
 
-function shareResult(luckLevel, score) {
-  const msg = `मैंने Coin Luck Test खेला और मेरा स्कोर ${score}/10 आया — मैं हूँ ${luckLevel}! 😄  
-👉 आप भी Try करें: (अपना लिंक डालें)`;
-  const encodedMsg = encodeURIComponent(msg);
-  const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=&quote=${encodedMsg}`;
+function shareResultFB(luckLevel, score, link) {
+  // Facebook share with OG preview
+  const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
   window.open(fbUrl, '_blank');
+}
+
+function shareResultWA(luckLevel, score, link) {
+  const msg = `मैंने Coin Luck Test खेला और मेरा स्कोर ${score}/10 आया — मैं हूँ ${luckLevel}! 😄  
+👉 आप भी Try करें: ${link}`;
+  const encodedMsg = encodeURIComponent(msg);
+  const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+  window.open(waUrl, '_blank');
 }
 </script>
 
